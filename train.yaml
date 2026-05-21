@@ -1,0 +1,41 @@
+mode: train
+seed: 42
+paths:
+  output_root: ./outputs
+  data_dir: /home/hmq/lxh/PVMMOE/datasets/NIPS/Folmos/5min
+  train_file: train_data.csv
+  val_file: val_data.csv
+  test_file: test_data.csv
+runtime:
+  device: npu
+  npu_device_index: 0
+  cuda_device_index: 0
+data:
+  timestamp_col: timestamp
+  timestamp_format: '%Y-%m-%d %H:%M:%S'
+  feature_columns:
+  - irr_ghi
+  target_column: target_ghi_15min
+  sequence_length: 24
+  time_interval_minutes: 5
+  target_horizon_minutes: 15
+  feature_columns_csv: B(ghi_kt|5min),B(ghi_kt|10min),B(ghi_kt|15min),B(ghi_kt|20min),B(ghi_kt|25min),B(ghi_kt|30min),B(dni_kt|5min),B(dni_kt|10min),B(dni_kt|15min),B(dni_kt|20min),B(dni_kt|25min),B(dni_kt|30min),V(ghi_kt|5min),V(ghi_kt|10min),V(ghi_kt|15min),V(ghi_kt|20min),V(ghi_kt|25min),V(ghi_kt|30min),V(dni_kt|5min),V(dni_kt|10min),V(dni_kt|15min),V(dni_kt|20min),V(dni_kt|25min),V(dni_kt|30min),L(ghi_kt|5min),L(ghi_kt|10min),L(ghi_kt|15min),L(ghi_kt|20min),L(ghi_kt|25min),L(ghi_kt|30min),L(dni_kt|5min),L(dni_kt|10min),L(dni_kt|15min),L(dni_kt|20min),L(dni_kt|25min),L(dni_kt|30min),irr_ghi,irr_dni,irr_dhi
+model:
+  hidden_size: 128
+  depth: 3
+  dim_head: 32
+  heads: 4
+  ff_mult: 4
+  dropout: 0.1
+  num_mem_tokens: 4
+  use_reversible_instance_norm: true
+  reversible_instance_norm_affine: true
+  flash_attn: true
+train:
+  batch_size: 256
+  shuffle: true
+  num_workers: 0
+  lr: 0.001
+  epochs: 150
+  early_stop_patience: 30
+  save_epochs: [1, 2, 3, 4, 5 ,6]

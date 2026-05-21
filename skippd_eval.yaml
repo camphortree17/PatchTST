@@ -1,0 +1,41 @@
+mode: eval
+seed: 42
+paths:
+  project_root: /home/hmq/zyq/PatchTST
+  output_root: /home/hmq/zyq/PatchTST/outputs
+  test_csv:
+  val_csv:
+  model_path:
+  norm_stats_path:
+runtime:
+  device: auto
+  npu_device_index: 0
+  cuda_device_index: 0
+data:
+  timestamp_col: timestamp
+  timestamp_format: '%Y-%m-%d %H:%M:%S'
+  feature_columns:
+  - irr_ghi
+  feature_columns_csv: B(ghi|5min),B(ghi|10min),B(ghi|15min),B(ghi|20min),B(ghi|25min),B(ghi|30min),V(ghi|5min),V(ghi|10min),V(ghi|15min),V(ghi|20min),V(ghi|25min),V(ghi|30min),L(ghi|5min),L(ghi|10min),L(ghi|15min),L(ghi|20min),L(ghi|25min),L(ghi|30min),irr_ghi
+  target_column: target_ghi_15min
+  sequence_length: 15
+  target_horizon_minutes: 15
+  time_interval_minutes: 1
+  time_gap_policy: warn
+model:
+  hidden_size: 128
+  depth: 3
+  dim_head: 32
+  heads: 4
+  ff_mult: 4
+  dropout: 0.1
+  num_mem_tokens: 4
+  use_reversible_instance_norm: true
+  reversible_instance_norm_affine: true
+  flash_attn: true
+eval:
+  batch_size: 256
+  num_workers: 0
+  plot_points: 300
+  result_csv_file: test_predictions.csv
+  ws_alpha: 0.1
