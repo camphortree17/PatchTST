@@ -1,0 +1,40 @@
+mode: eval
+seed: 42
+paths:
+  project_root: /home/hmq/zyq/PatchTST
+  output_root: /home/hmq/zyq/PatchTST/outputs
+  val_csv: /home/hmq/PVMMOE/datasets/SIRTA/processed/val_processed_1min.csv
+  test_csv: /home/hmq/PVMMOE/datasets/SIRTA/processed/test_processed_1min.csv
+  model_path: /home/hmq/zyq/PatchTST/outputs/sirta_train_20260521_214023/model_best.pth
+  norm_stats_path: /home/hmq/zyq/PatchTST/outputs/sirta_train_20260521_214023/norm_stats.npz
+runtime:
+  device: auto
+  npu_device_index: 3
+  cuda_device_index: 0
+data:
+  timestamp_col: timestamp
+  timestamp_format: '%Y-%m-%d %H:%M:%S'
+  feature_columns:
+  feature_columns_csv: Direct_Solar_Flux,Diffuse_Solar_Flux,Global_Solar_Flux,Downwelling_IR_Flux,Min_Direct_Solar_Flux,Min_Diffuse_Solar_Flux,Min_Global_Solar_Flux,Min_Downwelling_IR_Flux,Max_Direct_Solar_Flux,Max_Diffuse_Solar_Flux,Max_Global_Solar_Flux,Max_Downwelling_IR_Flux,Std_Direct_Solar_Flux,Std_Diffuse_Solar_Flux,Std_Global_Solar_Flux,Std_Downwelling_IR_Flux,Number_Of_Values,Pyrgeometer_Temperature,Solar_Zenith_Angle,Solar_Azimuthal_Angle,Precipitation_Zone_2,Relative_Humidity_Zone_2,Direct_Solar_Flux_QC_Flag,Diffuse_Solar_Flux_QC_Flag,Global_Solar_Flux_QC_Flag,Downwelling_IR_Flux_QC_Flag,Solar_Flux_Consistency_QC_Flag,Solar_Tracker_QC_Flag,Direct_Solar_Flux_BSRN_Flag,Diffuse_Solar_Flux_BSRN_Flag,Global_Solar_Flux_BSRN_Flag,Downwelling_IR_Flux_BSRN_Flag,B(Global_Solar_Flux|5min),V(Global_Solar_Flux|5min),L(Global_Solar_Flux|5min),B(Global_Solar_Flux|10min),V(Global_Solar_Flux|10min),L(Global_Solar_Flux|10min),B(Global_Solar_Flux|15min),V(Global_Solar_Flux|15min),L(Global_Solar_Flux|15min),B(Global_Solar_Flux|20min),V(Global_Solar_Flux|20min),L(Global_Solar_Flux|20min),B(Global_Solar_Flux|25min),V(Global_Solar_Flux|25min),L(Global_Solar_Flux|25min),B(Global_Solar_Flux|30min),V(Global_Solar_Flux|30min),L(Global_Solar_Flux|30min)
+  target_column: target_Global_Solar_Flux_15min
+  sequence_length: 15
+  target_horizon_minutes: 15
+  time_interval_minutes: 1
+  time_gap_policy: warn
+model:
+  hidden_size: 128
+  depth: 3
+  dim_head: 32
+  heads: 4
+  ff_mult: 4
+  dropout: 0.1
+  num_mem_tokens: 4
+  use_reversible_instance_norm: true
+  reversible_instance_norm_affine: true
+  flash_attn: true
+eval:
+  batch_size: 256
+  num_workers: 0
+  plot_points: 300
+  result_csv_file: test_predictions.csv
+  ws_alpha: 0.1
